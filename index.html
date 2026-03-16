@@ -255,7 +255,7 @@ header::after {
 .filter-chip.active { background: var(--navy); color: #fff; border-color: var(--navy); }
 
 .entry-card { border: 1px solid var(--border); border-radius: 14px; background: var(--surface); margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
-.entry-top { padding: 14px 16px; cursor: pointer; touch-action: manipulation; }
+.entry-top { padding: 10px 12px; cursor: pointer; touch-action: manipulation; }
 .entry-meta { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
 .entry-date { font-family: 'Nunito', sans-serif; font-size: 16px; font-weight: 800; color: var(--navy); }
 .entry-mode-badge { font-family: 'Nunito', sans-serif; font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 20px; background: var(--orange-dim); color: var(--orange); border: 1px solid rgba(229,124,31,0.3); white-space: nowrap; }
@@ -371,7 +371,7 @@ header::after {
 .filter-chip.active { background: var(--accent-bg); color: var(--accent); border-color: var(--accent-dim); }
 
 .entry-card { border: 1px solid var(--border); border-radius: 8px; background: var(--surface); margin-bottom: 10px; overflow: hidden; }
-.entry-top { padding: 14px 16px; cursor: pointer; touch-action: manipulation; }
+.entry-top { padding: 10px 12px; cursor: pointer; touch-action: manipulation; }
 .entry-meta { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
 .entry-date { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; color: #fff; }
 .entry-mode-badge { font-family: 'JetBrains Mono', monospace; font-size: 9px; padding: 3px 8px; border-radius: 3px; background: var(--accent-bg); color: var(--accent-dim); border: 1px solid var(--accent-dim); white-space: nowrap; }
@@ -853,7 +853,10 @@ function renderDiary() {
   }
 
   sorted.forEach(entry => {
-    const dt = new Date(entry.datetime);
+    const [datePart, timePart = '00:00'] = (entry.datetime || '').split('T');
+    const [dy, dm, dd] = datePart.split('-').map(Number);
+    const [dh, dmin] = timePart.split(':').map(Number);
+    const dt = new Date(dy, dm - 1, dd, dh, dmin);
     const dateStr = dt.toLocaleDateString('pt-BR', { day:'2-digit', month:'short', year:'numeric' });
     const timeStr = dt.toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
     const totalCapturas = (entry.captures || []).length;
