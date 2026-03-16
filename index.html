@@ -49,6 +49,13 @@ body {
   padding-bottom: 80px;
 }
 
+/* ── SPLASH ── */
+#splash { position: fixed; inset: 0; z-index: 9999; background: #1F3555; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; transition: opacity 0.4s ease; }
+#splash.hidden { opacity: 0; pointer-events: none; }
+#splash-logo { width: 80px; height: 80px; border-radius: 18px; object-fit: contain; }
+#splash-title { font-family: 'Nunito', sans-serif; font-size: 28px; font-weight: 900; color: #E57C1F; letter-spacing: 2px; }
+#splash-sub { font-family: 'Nunito Sans', sans-serif; font-size: 13px; color: rgba(255,255,255,0.5); letter-spacing: 1px; }
+
 /* ── HEADER ── */
 header {
   position: relative; z-index: 1;
@@ -477,6 +484,12 @@ header::after {
 </style>
 </head>
 <body>
+
+<div id="splash">
+  <img id="splash-logo" src="icons/icon-192.png" alt="Afluente PRO">
+  <div id="splash-title">AFLUENTE PRO</div>
+  <div id="splash-sub">App de Pesca Esportiva</div>
+</div>
 
 <header>
   <div class="header-inner">
@@ -1327,6 +1340,16 @@ document.addEventListener('keydown', e => {
 loadLocal();
 renderChecklist();
 
+let splashDone = false;
+function hideSplash() {
+  if (splashDone) return;
+  splashDone = true;
+  const s = document.getElementById('splash');
+  s.classList.add('hidden');
+  setTimeout(() => s.remove(), 420);
+}
+setTimeout(hideSplash, 3000);
+
 onValue(checklistRef, snapshot => {
   const data = snapshot.val();
   if (data) state = { checked:{}, extras:{}, ...data };
@@ -1341,7 +1364,8 @@ onValue(diaryRef, snapshot => {
   const data = snapshot.val();
   if (data && Array.isArray(data)) diary = data;
   else if (data && typeof data === 'object') diary = Object.values(data);
-}, () => {});
+  hideSplash();
+}, () => { hideSplash(); });
 </script>
 </body>
 </html>
