@@ -1341,12 +1341,18 @@ loadLocal();
 renderChecklist();
 
 let splashDone = false;
+const splashStart = Date.now();
+const SPLASH_MIN = 1500;
 function hideSplash() {
   if (splashDone) return;
   splashDone = true;
-  const s = document.getElementById('splash');
-  s.classList.add('hidden');
-  setTimeout(() => s.remove(), 420);
+  const elapsed = Date.now() - splashStart;
+  const delay = Math.max(0, SPLASH_MIN - elapsed);
+  setTimeout(() => {
+    const s = document.getElementById('splash');
+    s.classList.add('hidden');
+    setTimeout(() => s.remove(), 420);
+  }, delay);
 }
 setTimeout(hideSplash, 3000);
 
