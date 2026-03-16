@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Peba — App de Pesca</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&family=Nunito+Sans:wght@400;500;600&display=swap');
+
+:root {
+  /* Afluente PRO brand */
+  --navy: #1F3555;
+  --navy-dark: #152540;
+  --navy-mid: #2a4a70;
+  --navy-light: #e8eef5;
+  --orange: #E57C1F;
+  --orange-light: #fdf0e0;
+  --orange-dim: rgba(229,124,31,0.15);
+  --charcoal: #4a5568;
+  --charcoal-light: #718096;
+
+  /* Layout */
+  --bg: #f4f6f9;
+  --surface: #ffffff;
+  --surface2: #f8fafc;
+  --border: #e2e8f0;
+  --border-mid: #cbd5e0;
+  --ink: #1a202c;
+  --ink-mid: #4a5568;
+  --ink-dim: #a0aec0;
+  --accent: var(--orange);
+  --accent-dim: #b85e10;
+  --accent-bg: var(--orange-dim);
+  --water: #2b6cb0;
+  --red: #e53e3e;
+  --green: #276749;
+  --green-bg: #e6fffa;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Nunito Sans', sans-serif;
+  min-height: 100vh;
+  padding-bottom: 80px;
+}
+
+/* ── HEADER ── */
+header {
+  position: relative; z-index: 1;
+  background: var(--navy);
+  padding: 0;
+  overflow: hidden;
+}
+
+header::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--orange), #f5a623);
+}
+
+.header-inner {
+  padding: 24px 20px 20px;
+  position: relative; z-index: 1;
+}
+
+.brand-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.brand-logo {
+  width: 36px; height: 36px;
+  background: var(--orange);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.brand-name {
+  font-family: 'Nunito', sans-serif;
+  font-size: 18px;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: 0.5px;
+  line-height: 1;
+}
+
+.brand-name span {
+  color: var(--orange);
+}
+
+.brand-tagline {
+  font-size: 10px;
+  color: rgba(255,255,255,0.45);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-family: 'Nunito Sans', sans-serif;
+  font-weight: 600;
+}
+
+.header-location {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.55);
+  font-weight: 600;
+}
+
+/* ── TABS ── */
+.tabs {
+  position: relative; z-index: 1;
+  display: flex;
+  background: var(--navy-dark);
+  border-bottom: none;
+}
+
+.tab-btn {
+  flex: 1;
+  font-family: 'Nunito', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 12px 4px;
+  border: none;
+  background: transparent;
+  color: rgba(255,255,255,0.4);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: all 0.15s;
+  border-bottom: 3px solid transparent;
+}
+
+.tab-btn.active {
+  color: #fff;
+  border-bottom-color: var(--orange);
+  background: rgba(229,124,31,0.08);
+}
+
+/* ── MODE SELECTOR ── */
+.mode-selector {
+  position: relative; z-index: 1;
+  padding: 16px 16px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.section-label {
+  font-family: 'Nunito', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--ink-dim);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.mode-cards { display: flex; gap: 8px; }
+
+.mode-card {
+  flex: 1;
+  padding: 12px 10px;
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface2);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: all 0.2s;
+  text-align: left;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.mode-card:hover { border-color: var(--navy-mid); }
+
+.mode-card.active {
+  border-color: var(--navy);
+  background: var(--navy-light);
+  box-shadow: 0 2px 8px rgba(31,53,85,0.12);
+}
+
+.mode-icon { font-size: 20px; margin-bottom: 6px; display: block; }
+.mode-name { font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 800; color: var(--ink); line-height: 1.2; }
+.mode-card.active .mode-name { color: var(--navy); }
+.mode-desc { font-size: 10px; color: var(--ink-dim); margin-top: 2px; font-weight: 600; }
+
+/* ── PROGRESS ── */
+.progress-wrap {
+  position: relative; z-index: 1;
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.prog-track { flex: 1; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.prog-fill { height: 100%; background: linear-gradient(90deg, var(--navy), var(--orange)); border-radius: 3px; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); width: 0%; }
+.prog-text { font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700; color: var(--ink-mid); white-space: nowrap; }
+.prog-text strong { color: var(--navy); }
+
+/* ── CONTENT ── */
+.content { position: relative; z-index: 1; padding: 12px 16px 20px; max-width: 680px; }
+
+.cat-header {
+  font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 800;
+  letter-spacing: 1.5px; text-transform: uppercase; color: var(--charcoal-light);
+  padding: 16px 0 8px; display: flex; align-items: center; gap: 10px;
+}
+.cat-header::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* ── ITEM ── */
+.item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 14px; border: 1px solid var(--border); border-radius: 10px;
+  margin-bottom: 6px; background: var(--surface); cursor: pointer;
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+  transition: all 0.15s; user-select: none; -webkit-user-select: none;
+  width: 100%; text-align: left; font-family: inherit; color: inherit;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.item:hover { border-color: var(--navy-mid); box-shadow: 0 2px 8px rgba(31,53,85,0.1); }
+.item.checked { opacity: 0.45; box-shadow: none; }
+.item.checked .item-name { text-decoration: line-through; color: var(--ink-dim); }
+
+.cb {
+  width: 22px; height: 22px; border: 2px solid var(--border-mid);
+  border-radius: 6px; flex-shrink: 0; display: flex; align-items: center;
+  justify-content: center; transition: all 0.15s; background: var(--surface2);
+}
+.item.checked .cb { background: var(--green); border-color: var(--green); }
+.cb svg { display: none; }
+.item.checked .cb svg { display: block; }
+.item-name { font-size: 14px; font-weight: 600; flex: 1; color: var(--ink); }
+
+/* ── ADD ROW ── */
+.add-row { display: flex; gap: 8px; margin-top: 18px; padding-top: 14px; border-top: 1.5px dashed var(--border-mid); }
+.add-input { flex: 1; font-family: 'Nunito Sans', sans-serif; font-size: 14px; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 10px; background: var(--surface); color: var(--ink); font-weight: 500; }
+.add-input::placeholder { color: var(--ink-dim); }
+.add-input:focus { outline: none; border-color: var(--navy); box-shadow: 0 0 0 3px rgba(31,53,85,0.08); }
+.add-btn { font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 800; padding: 11px 16px; background: var(--navy); color: #fff; border: none; border-radius: 10px; cursor: pointer; touch-action: manipulation; white-space: nowrap; }
+.add-btn:hover { background: var(--navy-mid); }
+
+/* ── RESET ROW ── */
+.reset-row { position: relative; z-index: 1; display: flex; justify-content: flex-end; padding: 12px 16px; border-top: 1px solid var(--border); background: var(--surface); }
+.reset-btn { font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700; padding: 7px 14px; border: 1.5px solid var(--border-mid); background: transparent; color: var(--ink-dim); cursor: pointer; touch-action: manipulation; border-radius: 8px; transition: all 0.15s; }
+.reset-btn:hover { border-color: var(--red); color: var(--red); }
+
+/* ── DIARY ── */
+.diary-wrap { position: relative; z-index: 1; padding: 0 16px 20px; background: var(--bg); min-height: 100vh; }
+.diary-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 0 12px; }
+.diary-title { font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 800; color: var(--navy); }
+.new-entry-btn { font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 800; padding: 10px 18px; background: var(--orange); color: #fff; border: none; border-radius: 10px; cursor: pointer; touch-action: manipulation; box-shadow: 0 2px 8px rgba(229,124,31,0.3); }
+.new-entry-btn:hover { background: var(--accent-dim); }
+
+.filter-bar { display: flex; gap: 6px; margin-bottom: 14px; overflow-x: auto; padding-bottom: 2px; }
+.filter-chip { font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700; padding: 6px 14px; border: 1.5px solid var(--border-mid); border-radius: 20px; background: var(--surface); color: var(--ink-mid); cursor: pointer; touch-action: manipulation; white-space: nowrap; transition: all 0.15s; }
+.filter-chip.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+
+.entry-card { border: 1px solid var(--border); border-radius: 14px; background: var(--surface); margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+.entry-top { padding: 14px 16px; cursor: pointer; touch-action: manipulation; }
+.entry-meta { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.entry-date { font-family: 'Nunito', sans-serif; font-size: 16px; font-weight: 800; color: var(--navy); }
+.entry-mode-badge { font-family: 'Nunito', sans-serif; font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 20px; background: var(--orange-dim); color: var(--orange); border: 1px solid rgba(229,124,31,0.3); white-space: nowrap; }
+.entry-local { font-size: 12px; font-weight: 600; color: var(--water); margin-top: 4px; }
+.entry-conditions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.cond-pill { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 6px; background: var(--surface2); color: var(--ink-mid); border: 1px solid var(--border); }
+.entry-stats { display: flex; gap: 14px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+.entry-stat { font-size: 11px; color: var(--ink-dim); font-weight: 600; }
+.entry-stat strong { display: block; font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 800; color: var(--navy); }
+.entry-body { display: none; padding: 0 16px 14px; border-top: 1px solid var(--border); background: var(--surface2); }
+.entry-body.open { display: block; }
+.captures-list { margin-top: 10px; }
+.capture-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.capture-row:last-child { border-bottom: none; }
+.capture-species { font-weight: 700; font-size: 13px; color: var(--ink); flex: 1; }
+.capture-detail { font-size: 12px; font-weight: 600; color: var(--ink-dim); }
+.entry-obs { font-size: 13px; color: var(--ink-mid); margin-top: 10px; line-height: 1.5; font-style: italic; background: var(--surface); padding: 10px 12px; border-radius: 8px; border-left: 3px solid var(--orange); }
+.entry-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.btn-sm { font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700; padding: 7px 14px; border-radius: 8px; cursor: pointer; touch-action: manipulation; transition: all 0.15s; border: 1.5px solid var(--border-mid); background: var(--surface); color: var(--ink-mid); }
+.btn-edit:hover { border-color: var(--navy); color: var(--navy); }
+.btn-danger:hover { border-color: var(--red); color: var(--red); }
+
+/* ── STATS ── */
+.stats-wrap { position: relative; z-index: 1; padding: 0 16px 30px; background: var(--bg); min-height: 100vh; }
+.stats-header { padding: 16px 0 16px; font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 800; color: var(--navy); }
+
+.stat-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 24px; }
+.stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px 12px; text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+.stat-card .num { font-family: 'Nunito', sans-serif; font-size: 30px; font-weight: 900; color: var(--navy); line-height: 1; }
+.stat-card .lbl { font-size: 10px; font-weight: 700; color: var(--ink-dim); margin-top: 4px; letter-spacing: 0.5px; text-transform: uppercase; }
+
+.chart-section { margin-bottom: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+.chart-title { font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--charcoal); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.chart-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+.bar-chart { display: flex; flex-direction: column; gap: 8px; }
+.bar-row { display: flex; align-items: center; gap: 10px; }
+.bar-label { font-size: 11px; font-weight: 600; color: var(--ink-mid); width: 130px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bar-track { flex: 1; height: 24px; background: var(--surface2); border-radius: 6px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 6px; background: linear-gradient(90deg, var(--navy), #2a5298); transition: width 0.8s cubic-bezier(0.4,0,0.2,1); display: flex; align-items: center; padding-left: 8px; min-width: 32px; }
+.bar-val { font-family: 'Nunito', sans-serif; font-size: 11px; color: #fff; font-weight: 800; }
+
+.month-chart { display: flex; align-items: flex-end; gap: 6px; height: 100px; padding-bottom: 24px; position: relative; }
+.month-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px; position: relative; height: 100%; }
+.month-bar { width: 100%; border-radius: 4px 4px 0 0; background: linear-gradient(180deg, var(--orange), #b85e10); transition: height 0.6s cubic-bezier(0.4,0,0.2,1); }
+.month-bar.zero { background: var(--border); height: 3px !important; }
+.month-lbl { font-size: 9px; font-weight: 700; color: var(--ink-dim); position: absolute; bottom: -20px; }
+.month-num { font-family: 'Nunito', sans-serif; font-size: 10px; font-weight: 800; color: var(--navy); margin-bottom: 2px; }
+
+.local-chart { display: flex; flex-direction: column; gap: 10px; }
+.local-row { display: flex; flex-direction: column; gap: 4px; }
+.local-top { display: flex; justify-content: space-between; }
+.local-name { font-size: 12px; font-weight: 700; color: var(--ink-mid); }
+.local-count { font-size: 12px; font-weight: 700; color: var(--orange); }
+.local-bar { height: 7px; background: var(--surface2); border-radius: 4px; overflow: hidden; }
+.local-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--navy-mid), var(--orange)); transition: width 0.8s; }
+
+.empty-stats { font-size: 13px; font-weight: 600; color: var(--ink-dim); text-align: center; padding: 50px 20px; line-height: 2; }
+
+/* ── FORM OVERLAY ── */
+.form-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; overflow-y: auto; padding: 20px; backdrop-filter: blur(4px); }
+.form-overlay.open { display: block; }
+.form-box { max-width: 600px; margin: 0 auto; padding-bottom: 40px; background: var(--surface); border-radius: 20px; padding: 24px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+.form-title { font-family: 'Nunito', sans-serif; font-size: 20px; font-weight: 900; color: var(--navy); margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+.close-btn { font-size: 20px; background: var(--surface2); border: none; color: var(--ink-mid); cursor: pointer; padding: 6px 10px; touch-action: manipulation; border-radius: 8px; }
+.form-section { margin-bottom: 18px; }
+.form-label { font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 800; letter-spacing: 1px; color: var(--ink-mid); text-transform: uppercase; margin-bottom: 8px; display: block; }
+.form-input, .form-select, .form-textarea { width: 100%; font-family: 'Nunito Sans', sans-serif; font-size: 14px; font-weight: 500; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 10px; background: var(--surface2); color: var(--ink); }
+.form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--navy); box-shadow: 0 0 0 3px rgba(31,53,85,0.08); }
+.form-select option { background: var(--surface); }
+.form-textarea { resize: vertical; min-height: 70px; }
+.form-row { display: flex; gap: 10px; }
+.form-row > * { flex: 1; }
+
+.conditions-box { border: 1.5px solid var(--border); border-radius: 10px; padding: 14px; background: var(--navy-light); margin-top: 6px; }
+.conditions-loading { font-size: 12px; font-weight: 600; color: var(--ink-dim); }
+.conditions-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.cond-item { font-size: 11px; font-weight: 600; color: var(--ink-dim); }
+.cond-item strong { display: block; font-family: 'Nunito', sans-serif; font-size: 16px; font-weight: 800; color: var(--navy); margin-bottom: 1px; }
+
+.capture-form-row { display: flex; gap: 8px; flex-wrap: wrap; padding: 12px; border: 1.5px solid var(--border); border-radius: 10px; background: var(--surface2); margin-bottom: 8px; position: relative; padding-right: 36px; }
+.capture-form-row .form-select, .capture-form-row .form-input { flex: 1; min-width: 100px; padding: 8px 10px; font-size: 13px; }
+.remove-capture { position: absolute; top: 8px; right: 8px; background: none; border: none; color: var(--ink-dim); cursor: pointer; font-size: 14px; touch-action: manipulation; padding: 2px 6px; }
+.add-capture-btn { font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700; padding: 10px 14px; border: 1.5px dashed var(--border-mid); border-radius: 10px; background: transparent; color: var(--ink-dim); cursor: pointer; touch-action: manipulation; width: 100%; transition: all 0.15s; }
+.add-capture-btn:hover { border-color: var(--navy); color: var(--navy); }
+.save-entry-btn { width: 100%; font-family: 'Nunito', sans-serif; font-size: 16px; font-weight: 900; padding: 14px; background: var(--orange); color: #fff; border: none; border-radius: 12px; cursor: pointer; touch-action: manipulation; margin-top: 20px; letter-spacing: 0.5px; box-shadow: 0 4px 12px rgba(229,124,31,0.35); }
+.save-entry-btn:hover { background: var(--accent-dim); }
+
+.empty-diary { text-align: center; padding: 50px 20px; font-size: 13px; font-weight: 600; color: var(--ink-dim); line-height: 2; }
+
+.fb-notice { position: relative; z-index: 1; margin: 10px 16px 0; padding: 9px 14px; background: #fffbeb; border: 1px solid #f6c343; border-radius: 8px; font-size: 12px; font-weight: 600; color: #b7791f; }
+
+.hidden { display: none !important; }
+
+.add-row { display: flex; gap: 8px; margin-top: 18px; padding-top: 14px; border-top: 1px dashed var(--border-mid); }
+.add-input { flex: 1; font-family: 'Instrument Sans', sans-serif; font-size: 14px; padding: 10px 12px; border: 1.5px solid var(--border-mid); border-radius: 5px; background: var(--surface2); color: var(--ink); }
+.add-input::placeholder { color: var(--ink-dim); }
+.add-input:focus { outline: none; border-color: var(--accent-dim); }
+.add-btn { font-family: 'JetBrains Mono', monospace; font-size: 11px; padding: 10px 14px; background: var(--accent-dim); color: #fff; border: none; border-radius: 5px; cursor: pointer; touch-action: manipulation; white-space: nowrap; }
+
+.reset-row { position: relative; z-index: 1; display: flex; justify-content: flex-end; padding: 12px 20px; border-top: 1px solid var(--border); }
+.reset-btn { font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 7px 14px; border: 1px solid var(--border-mid); background: transparent; color: var(--ink-dim); cursor: pointer; touch-action: manipulation; border-radius: 4px; transition: all 0.15s; }
+.reset-btn:hover { border-color: var(--orange); color: var(--orange); }
+
+/* ── DIARY ── */
+.diary-wrap { position: relative; z-index: 1; padding: 0 20px 20px; }
+.diary-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 0 12px; }
+.diary-title { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: var(--ink-mid); letter-spacing: 1px; }
+.new-entry-btn { font-family: 'JetBrains Mono', monospace; font-size: 11px; padding: 9px 16px; background: var(--accent); color: #0c1410; border: none; border-radius: 5px; cursor: pointer; touch-action: manipulation; font-weight: 500; }
+
+.filter-bar { display: flex; gap: 6px; margin-bottom: 14px; overflow-x: auto; padding-bottom: 2px; }
+.filter-chip { font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 5px 12px; border: 1px solid var(--border-mid); border-radius: 20px; background: transparent; color: var(--ink-dim); cursor: pointer; touch-action: manipulation; white-space: nowrap; transition: all 0.15s; }
+.filter-chip.active { background: var(--accent-bg); color: var(--accent); border-color: var(--accent-dim); }
+
+.entry-card { border: 1px solid var(--border); border-radius: 8px; background: var(--surface); margin-bottom: 10px; overflow: hidden; }
+.entry-top { padding: 14px 16px; cursor: pointer; touch-action: manipulation; }
+.entry-meta { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.entry-date { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; color: #fff; }
+.entry-mode-badge { font-family: 'JetBrains Mono', monospace; font-size: 9px; padding: 3px 8px; border-radius: 3px; background: var(--accent-bg); color: var(--accent-dim); border: 1px solid var(--accent-dim); white-space: nowrap; }
+.entry-local { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--water); margin-top: 4px; }
+.entry-conditions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.cond-pill { font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 3px 8px; border-radius: 3px; background: var(--surface2); color: var(--ink-mid); border: 1px solid var(--border-mid); }
+.entry-stats { display: flex; gap: 14px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+.entry-stat { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--ink-dim); }
+.entry-stat strong { display: block; font-size: 14px; color: var(--ink-mid); font-family: 'Syne', sans-serif; }
+.entry-body { display: none; padding: 0 16px 14px; border-top: 1px solid var(--border); }
+.entry-body.open { display: block; }
+.captures-list { margin-top: 10px; }
+.capture-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.capture-row:last-child { border-bottom: none; }
+.capture-species { font-weight: 600; font-size: 13px; color: var(--ink); flex: 1; }
+.capture-detail { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--ink-dim); }
+.entry-obs { font-size: 13px; color: var(--ink-mid); margin-top: 10px; line-height: 1.5; font-style: italic; }
+.entry-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.btn-sm { font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 7px 14px; border-radius: 4px; cursor: pointer; touch-action: manipulation; transition: all 0.15s; border: 1px solid var(--border-mid); background: transparent; color: var(--ink-dim); }
+.btn-edit:hover { border-color: var(--accent-dim); color: var(--accent); }
+.btn-danger:hover { border-color: var(--red); color: var(--red); }
+
+/* ── STATS ── */
+.stats-wrap { position: relative; z-index: 1; padding: 0 20px 30px; }
+.stats-header { padding: 16px 0 20px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: var(--ink-mid); letter-spacing: 1px; }
+
+.stat-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 24px; }
+.stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px 12px; text-align: center; }
+.stat-card .num { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; color: var(--accent); line-height: 1; }
+.stat-card .lbl { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--ink-dim); margin-top: 4px; letter-spacing: 1px; text-transform: uppercase; }
+
+.chart-section { margin-bottom: 28px; }
+.chart-title { font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--ink-dim); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+.chart-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* Bar chart */
+.bar-chart { display: flex; flex-direction: column; gap: 8px; }
+.bar-row { display: flex; align-items: center; gap: 10px; }
+.bar-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-mid); width: 140px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bar-track { flex: 1; height: 22px; background: var(--surface2); border-radius: 3px; overflow: hidden; position: relative; }
+.bar-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--accent-dim), var(--accent)); transition: width 0.8s cubic-bezier(0.4,0,0.2,1); display: flex; align-items: center; padding-left: 8px; min-width: 30px; }
+.bar-val { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #0c1410; font-weight: 600; }
+
+/* Monthly chart */
+.month-chart { display: flex; align-items: flex-end; gap: 6px; height: 100px; padding-bottom: 24px; position: relative; }
+.month-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px; position: relative; height: 100%; }
+.month-bar { width: 100%; border-radius: 3px 3px 0 0; background: linear-gradient(180deg, var(--accent), var(--accent-dim)); transition: height 0.6s cubic-bezier(0.4,0,0.2,1); min-height: 3px; }
+.month-bar.zero { background: var(--surface2); opacity: 0.4; min-height: 3px; height: 3px !important; }
+.month-lbl { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--ink-dim); position: absolute; bottom: -20px; }
+.month-num { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--ink-mid); margin-bottom: 2px; }
+
+/* Local chart */
+.local-chart { display: flex; flex-direction: column; gap: 10px; }
+.local-row { display: flex; flex-direction: column; gap: 4px; }
+.local-top { display: flex; justify-content: space-between; }
+.local-name { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-mid); }
+.local-count { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent-dim); }
+.local-bar { height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
+.local-fill { height: 100%; border-radius: 3px; background: var(--water); transition: width 0.8s; }
+
+.empty-stats { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink-dim); text-align: center; padding: 50px 20px; line-height: 2; }
+
+/* ── FORM OVERLAY ── */
+.form-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5); z-index: 100; overflow-y: auto; padding: 20px; backdrop-filter: blur(4px);
+}
+.form-overlay.open { display: block; }
+.form-box { max-width: 600px; margin: 0 auto; padding-bottom: 40px; }
+.form-title { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+.close-btn { font-size: 20px; background: none; border: none; color: var(--ink-dim); cursor: pointer; padding: 4px 8px; touch-action: manipulation; }
+.form-section { margin-bottom: 18px; }
+.form-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--ink-dim); text-transform: uppercase; margin-bottom: 8px; display: block; }
+.form-input, .form-select, .form-textarea { width: 100%; font-family: 'Instrument Sans', sans-serif; font-size: 14px; padding: 11px 14px; border: 1.5px solid var(--border-mid); border-radius: 6px; background: var(--surface); color: var(--ink); }
+.form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--accent-dim); }
+.form-select option { background: var(--surface); }
+.form-textarea { resize: vertical; min-height: 70px; }
+.form-row { display: flex; gap: 10px; }
+.form-row > * { flex: 1; }
+
+.conditions-box { border: 1px solid var(--border-mid); border-radius: 6px; padding: 12px 14px; background: var(--surface2); margin-top: 6px; }
+.conditions-loading { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-dim); }
+.conditions-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.cond-item { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--ink-dim); }
+.cond-item strong { display: block; font-size: 16px; color: var(--ink); font-family: 'Syne', sans-serif; margin-bottom: 1px; }
+
+.capture-form-row { display: flex; gap: 8px; flex-wrap: wrap; padding: 12px; border: 1px solid var(--border-mid); border-radius: 6px; background: var(--surface2); margin-bottom: 8px; position: relative; padding-right: 36px; }
+.capture-form-row .form-select, .capture-form-row .form-input { flex: 1; min-width: 100px; padding: 8px 10px; font-size: 13px; }
+.remove-capture { position: absolute; top: 8px; right: 8px; background: none; border: none; color: var(--ink-dim); cursor: pointer; font-size: 14px; touch-action: manipulation; padding: 2px 6px; }
+.add-capture-btn { font-family: 'JetBrains Mono', monospace; font-size: 11px; padding: 9px 14px; border: 1px dashed var(--border-mid); border-radius: 6px; background: transparent; color: var(--ink-dim); cursor: pointer; touch-action: manipulation; width: 100%; transition: all 0.15s; }
+.add-capture-btn:hover { border-color: var(--accent-dim); color: var(--accent-dim); }
+.save-entry-btn { width: 100%; font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; padding: 14px; background: var(--accent); color: #0c1410; border: none; border-radius: 6px; cursor: pointer; touch-action: manipulation; margin-top: 20px; letter-spacing: 1px; }
+
+.empty-diary { text-align: center; padding: 50px 20px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink-dim); line-height: 2; }
+
+.fb-notice { position: relative; z-index: 1; margin: 10px 20px 0; padding: 8px 12px; background: var(--orange-bg); border: 1px solid rgba(255,140,66,0.2); border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--orange); }
+
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand-row">
+      <div class="brand-logo">🎣</div>
+      <div>
+        <div class="brand-name">AFLUENTE <span>PRO</span></div>
+        <div class="brand-tagline">App de Pesca Esportiva</div>
+      </div>
+    </div>
+    <div class="header-location">📍 Rio Parauapebas · Canaã dos Carajás</div>
+  </div>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="setTab('checklist', this)">✅ CHECK</button>
+  <button class="tab-btn" onclick="setTab('diario', this)">📓 DIÁRIO</button>
+  <button class="tab-btn" onclick="setTab('stats', this)">📊 STATS</button>
+</div>
+
+<div class="fb-notice" id="fb-notice">⚠ Conectando...</div>
+
+<!-- ── CHECKLIST ── -->
+<div id="tab-checklist">
+  <div class="mode-selector">
+    <div class="section-label">Tipo de saída</div>
+    <div class="mode-cards">
+      <div class="mode-card active" onclick="setMode('rapida-kayak', this)">
+        <span class="mode-icon">🛶</span>
+        <div class="mode-name">Rápida<br>Kayak</div>
+        <div class="mode-desc">4H · vai e volta</div>
+      </div>
+      <div class="mode-card" onclick="setMode('rapida-barco', this)">
+        <span class="mode-icon">🚤</span>
+        <div class="mode-name">Rápida<br>Barco</div>
+        <div class="mode-desc">4H · vai e volta</div>
+      </div>
+      <div class="mode-card" onclick="setMode('completa-barco', this)">
+        <span class="mode-icon">⛺</span>
+        <div class="mode-name">Completa<br>Barco</div>
+        <div class="mode-desc">rancho · pernoite</div>
+      </div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
+    <div class="prog-text"><strong id="prog-done">0</strong> / <span id="prog-total">0</span> itens</div>
+  </div>
+  <div class="content" id="checklist-content"></div>
+  <div class="reset-row">
+    <button class="reset-btn" onclick="resetMode()">↺ resetar modo atual</button>
+  </div>
+</div>
+
+<!-- ── DIÁRIO ── -->
+<div id="tab-diario" style="display:none;">
+  <div class="diary-wrap">
+    <div class="diary-header">
+      <span class="diary-title">// SAÍDAS REGISTRADAS</span>
+      <button class="new-entry-btn" onclick="openForm(null)">+ Nova saída</button>
+    </div>
+    <div class="filter-bar">
+      <button class="filter-chip active" onclick="setDiaryFilter('todos', this)">TODOS</button>
+      <button class="filter-chip" onclick="setDiaryFilter('caracol', this)">Caracol</button>
+      <button class="filter-chip" onclick="setDiaryFilter('ponte-vila-feitosa', this)">Ponte Vila Feitosa</button>
+      <button class="filter-chip" onclick="setDiaryFilter('na-13', this)">Na 13</button>
+      <button class="filter-chip" onclick="setDiaryFilter('ponto-kayak', this)">Ponto Kayak</button>
+    </div>
+    <div id="diary-list"></div>
+  </div>
+</div>
+
+<!-- ── STATS ── -->
+<div id="tab-stats" style="display:none;">
+  <div class="stats-wrap">
+    <div class="stats-header">// ESTATÍSTICAS</div>
+    <div id="stats-content"></div>
+  </div>
+</div>
+
+<!-- ── FORM OVERLAY ── -->
+<div class="form-overlay" id="form-overlay">
+  <div class="form-box">
+    <div class="form-title">
+      <span id="form-title-text">Nova saída</span>
+      <button class="close-btn" onclick="closeForm()">✕</button>
+    </div>
+    <div class="form-section">
+      <label class="form-label">Data e horário de saída</label>
+      <input class="form-input" type="datetime-local" id="f-datetime" onchange="fetchConditions()" />
+    </div>
+    <div class="form-section">
+      <div class="form-row">
+        <div>
+          <label class="form-label">Modo</label>
+          <select class="form-select" id="f-mode">
+            <option value="rapida-kayak">🛶 Rápida — Kayak</option>
+            <option value="rapida-barco">🚤 Rápida — Barco</option>
+            <option value="completa-barco">⛺ Completa — Barco</option>
+          </select>
+        </div>
+        <div>
+          <label class="form-label">Ponto de acesso</label>
+          <select class="form-select" id="f-local">
+            <option value="caracol">Caracol</option>
+            <option value="ponte-vila-feitosa">Ponte Vila Feitosa</option>
+            <option value="na-13">Na 13</option>
+            <option value="ponto-kayak">Ponto Kayak</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="form-section">
+      <label class="form-label">Condições automáticas</label>
+      <div class="conditions-box" id="conditions-box">
+        <div class="conditions-loading">← selecione data e horário para buscar</div>
+      </div>
+    </div>
+    <div class="form-section">
+      <label class="form-label">Capturas</label>
+      <div id="captures-container"></div>
+      <button class="add-capture-btn" onclick="addCaptureRow()">+ adicionar captura</button>
+    </div>
+    <div class="form-section">
+      <label class="form-label">Observações da saída</label>
+      <textarea class="form-textarea" id="f-obs" placeholder="Como foi a pescaria? Condições do rio, técnica usada, o que funcionou..."></textarea>
+    </div>
+    <button class="save-entry-btn" onclick="saveEntry()">SALVAR SAÍDA</button>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDJWHBzhT39rEZ0SdgL2kiK8oYX0NQHJvQ",
+  authDomain: "tralha-completa.firebaseapp.com",
+  databaseURL: "https://tralha-completa-default-rtdb.firebaseio.com",
+  projectId: "tralha-completa",
+  storageBucket: "tralha-completa.firebasestorage.app",
+  messagingSenderId: "393939671245",
+  appId: "1:393939671245:web:c2fcd0c01d211fd1dc7184"
+};
+
+const fbApp = initializeApp(firebaseConfig);
+const db = getDatabase(fbApp);
+const checklistRef = ref(db, 'pesca-checklist');
+const diaryRef = ref(db, 'pesca-diario');
+let firebaseOk = false;
+
+const ESPECIES = [
+  'Mandi Chorão','Mandi Cabeça de Ferro','Piranha Vermelha',
+  'Surubim Cachara','Piau Flamengo','Piau Cabeça Gorda',
+  'Piau Voador','Pacu Manteiga','Tucunaré Amarelo',
+  'Tucunaré Azul','Corvina','Outra'
+];
+
+const LOCAIS = {
+  'caracol': 'Caracol',
+  'ponte-vila-feitosa': 'Ponte Vila Feitosa',
+  'na-13': 'Na 13',
+  'ponto-kayak': 'Ponto Kayak',
+};
+
+const MODOS = {
+  'rapida-kayak': '🛶 Rápida — Kayak',
+  'rapida-barco': '🚤 Rápida — Barco',
+  'completa-barco': '⛺ Completa — Barco',
+};
+
+const MESES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+
+const CHECKLISTS = {
+  'rapida-kayak': [
+    { cat: 'Pesca', icon: '🎣', items: [
+      { id: 'rk-varas', name: 'Varas' }, { id: 'rk-caixa', name: 'Caixa de pesca' },
+      { id: 'rk-iscas', name: 'Iscas' }, { id: 'rk-regua', name: 'Régua' }, { id: 'rk-faca', name: 'Faca' },
+    ]},
+    { cat: 'Embarcação', icon: '🛶', items: [
+      { id: 'rk-colete', name: 'Colete salva-vidas' }, { id: 'rk-remo', name: 'Remo' },
+    ]},
+    { cat: 'Pessoal', icon: '🧴', items: [
+      { id: 'rk-agua', name: 'Água' }, { id: 'rk-cafe', name: 'Café' }, { id: 'rk-comida', name: 'Comida' },
+      { id: 'rk-protetor', name: 'Protetor solar' }, { id: 'rk-repel', name: 'Repelente' }, { id: 'rk-lanterna', name: 'Lanterna' },
+    ]},
+  ],
+  'rapida-barco': [
+    { cat: 'Pesca', icon: '🎣', items: [
+      { id: 'rb-varas', name: 'Varas' }, { id: 'rb-caixa', name: 'Caixa de pesca' },
+      { id: 'rb-iscas', name: 'Iscas' }, { id: 'rb-regua', name: 'Régua' }, { id: 'rb-faca', name: 'Faca' },
+    ]},
+    { cat: 'Embarcação', icon: '🚤', items: [
+      { id: 'rb-colete', name: 'Colete salva-vidas' }, { id: 'rb-gasolina', name: 'Gasolina' },
+      { id: 'rb-oleo', name: 'Óleo 2 tempos' }, { id: 'rb-saida', name: "Saída d'água do barco" },
+      { id: 'rb-ancora', name: 'Âncora / poita + corda' }, { id: 'rb-chave', name: 'Chave do barco' },
+    ]},
+    { cat: 'Pessoal', icon: '🧴', items: [
+      { id: 'rb-agua', name: 'Água' }, { id: 'rb-cafe', name: 'Café' }, { id: 'rb-comida', name: 'Comida' },
+      { id: 'rb-protetor', name: 'Protetor solar' }, { id: 'rb-repel', name: 'Repelente' }, { id: 'rb-lanterna', name: 'Lanterna' },
+    ]},
+  ],
+  'completa-barco': [
+    { cat: 'Pesca', icon: '🎣', items: [
+      { id: 'cb-varas', name: 'Varas' }, { id: 'cb-caixa', name: 'Caixa de pesca' },
+      { id: 'cb-iscas', name: 'Iscas' }, { id: 'cb-regua', name: 'Régua' }, { id: 'cb-faca', name: 'Faca' },
+    ]},
+    { cat: 'Embarcação', icon: '🚤', items: [
+      { id: 'cb-colete', name: 'Colete salva-vidas' }, { id: 'cb-gasolina', name: 'Gasolina' },
+      { id: 'cb-oleo', name: 'Óleo 2 tempos' }, { id: 'cb-saida', name: "Saída d'água do barco" },
+      { id: 'cb-ancora', name: 'Âncora / poita + corda' }, { id: 'cb-chave', name: 'Chave do barco' },
+      { id: 'cb-ferramentas', name: 'Caixa de ferramentas' },
+    ]},
+    { cat: 'Rancho & Cozinha', icon: '🍖', items: [
+      { id: 'cb-fogao', name: 'Fogão camping + gás' }, { id: 'cb-panela', name: 'Panela' },
+      { id: 'cb-sal', name: 'Sal' }, { id: 'cb-temperos', name: 'Temperos' },
+      { id: 'cb-comida', name: 'Comida / proteína' }, { id: 'cb-agua', name: 'Água' },
+      { id: 'cb-cafe', name: 'Café + garrafa térmica' }, { id: 'cb-isqueiro', name: 'Isqueiro / paeiro' },
+      { id: 'cb-gelo', name: 'Gelo + isopor' },
+    ]},
+    { cat: 'Abrigo', icon: '⛺', items: [
+      { id: 'cb-barraca', name: 'Barraca' }, { id: 'cb-dormir', name: 'Saco de dormir / rede' }, { id: 'cb-lona', name: 'Lona' },
+    ]},
+    { cat: 'Pessoal', icon: '🧴', items: [
+      { id: 'cb-protetor', name: 'Protetor solar' }, { id: 'cb-repel', name: 'Repelente' },
+      { id: 'cb-capa', name: 'Capa de chuva' }, { id: 'cb-lanterna', name: 'Lanterna de cabeça' },
+      { id: 'cb-remedio', name: 'Remédio (dor de cabeça)' },
+    ]},
+  ],
+};
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+const SK = 'peba-app-v1';
+let state = { checked: {}, extras: {} };
+let diary = [];
+let currentMode = 'rapida-kayak';
+let diaryFilter = 'todos';
+let captureCount = 0;
+let pendingConditions = null;
+let editingId = null;
+
+function loadLocal() {
+  try { const s = JSON.parse(localStorage.getItem(SK) || 'null'); if (s) state = s; } catch(e) {}
+  try { const d = JSON.parse(localStorage.getItem(SK+'-diary') || 'null'); if (d) diary = d; } catch(e) {}
+  if (!state.checked) state.checked = {};
+  if (!state.extras) state.extras = {};
+}
+
+function saveChecklist() {
+  localStorage.setItem(SK, JSON.stringify(state));
+  if (firebaseOk) set(checklistRef, state).catch(console.error);
+}
+
+function saveDiary() {
+  localStorage.setItem(SK+'-diary', JSON.stringify(diary));
+  if (firebaseOk) set(diaryRef, diary).catch(console.error);
+}
+
+function isChecked(id) { return !!(state.checked[currentMode] && state.checked[currentMode][id]); }
+
+function toggle(id) {
+  if (!state.checked[currentMode]) state.checked[currentMode] = {};
+  state.checked[currentMode][id] = !state.checked[currentMode][id];
+  saveChecklist();
+  renderChecklist();
+}
+
+function getExtras() { return state.extras[currentMode] || []; }
+
+// ── CHECKLIST RENDER ─────────────────────────────────────────────────────────
+function renderChecklist() {
+  const container = document.getElementById('checklist-content');
+  container.innerHTML = '';
+  const sections = CHECKLISTS[currentMode];
+  const extras = getExtras();
+  let total = 0, done = 0;
+
+  sections.forEach(section => {
+    const h = document.createElement('div');
+    h.className = 'cat-header';
+    h.innerHTML = `<span>${section.icon}</span>${section.cat}`;
+    container.appendChild(h);
+    section.items.forEach(item => {
+      const chk = isChecked(item.id);
+      total++; if (chk) done++;
+      container.appendChild(buildItem(item.id, item.name, chk, null));
+    });
+  });
+
+  if (extras.length > 0) {
+    const h = document.createElement('div');
+    h.className = 'cat-header';
+    h.innerHTML = `<span>➕</span>Adicionados`;
+    container.appendChild(h);
+    extras.forEach((item, idx) => {
+      const chk = isChecked(item.id);
+      total++; if (chk) done++;
+      container.appendChild(buildItem(item.id, item.name, chk, idx));
+    });
+  }
+
+  const addRow = document.createElement('div');
+  addRow.className = 'add-row';
+  addRow.innerHTML = `
+    <input class="add-input" id="add-input" type="text" placeholder="Adicionar item..." />
+    <button class="add-btn" onclick="addItem()">+ ADD</button>
+  `;
+  container.appendChild(addRow);
+
+  document.getElementById('prog-fill').style.width = total ? (done/total*100)+'%' : '0%';
+  document.getElementById('prog-done').textContent = done;
+  document.getElementById('prog-total').textContent = total;
+}
+
+function buildItem(id, name, checked, extraIdx) {
+  const btn = document.createElement('button');
+  btn.className = `item${checked ? ' checked' : ''}`;
+  btn.onclick = () => toggle(id);
+  btn.innerHTML = `
+    <div class="cb">
+      <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+        <path d="M1 4L3.5 6.5L9 1" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <span class="item-name">${name}</span>
+    ${extraIdx !== null ? `<button onclick="event.stopPropagation();removeExtra(${extraIdx})" style="background:none;border:none;color:var(--ink-dim);cursor:pointer;font-size:13px;padding:4px 6px;touch-action:manipulation;">✕</button>` : ''}
+  `;
+  return btn;
+}
+
+function setMode(mode, el) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderChecklist();
+}
+
+function addItem() {
+  const input = document.getElementById('add-input');
+  const name = input.value.trim();
+  if (!name) return;
+  if (!state.extras[currentMode]) state.extras[currentMode] = [];
+  const id = 'extra_' + currentMode + '_' + Date.now();
+  state.extras[currentMode].push({ id, name });
+  if (!state.checked[currentMode]) state.checked[currentMode] = {};
+  input.value = '';
+  saveChecklist();
+  renderChecklist();
+}
+
+function removeExtra(idx) {
+  const extras = state.extras[currentMode];
+  if (!extras) return;
+  const item = extras[idx];
+  if (item && state.checked[currentMode]) delete state.checked[currentMode][item.id];
+  extras.splice(idx, 1);
+  saveChecklist();
+  renderChecklist();
+}
+
+function resetMode() {
+  if (!confirm('Resetar checklist do modo atual?')) return;
+  if (state.checked[currentMode]) state.checked[currentMode] = {};
+  saveChecklist();
+  renderChecklist();
+}
+
+// ── DIARY RENDER ─────────────────────────────────────────────────────────────
+function renderDiary() {
+  const container = document.getElementById('diary-list');
+  container.innerHTML = '';
+
+  const filtered = diaryFilter === 'todos' ? diary : diary.filter(e => e.local === diaryFilter);
+  const sorted = [...filtered].sort((a, b) => new Date(b.datetime) - new Date(a.datetime));
+
+  if (sorted.length === 0) {
+    container.innerHTML = '<div class="empty-diary">Nenhuma saída registrada ainda.<br>Clique em "+ Nova saída" para começar.</div>';
+    return;
+  }
+
+  sorted.forEach(entry => {
+    const dt = new Date(entry.datetime);
+    const dateStr = dt.toLocaleDateString('pt-BR', { day:'2-digit', month:'short', year:'numeric' });
+    const timeStr = dt.toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
+    const totalCapturas = (entry.captures || []).length;
+    const cond = entry.conditions || {};
+
+    const condPills = [
+      cond.temp ? `🌡 ${cond.temp}` : null,
+      cond.weather || null,
+      cond.moon || null,
+      cond.pressure ? `📊 ${cond.pressure}` : null,
+    ].filter(Boolean).map(c => `<span class="cond-pill">${c}</span>`).join('');
+
+    const card = document.createElement('div');
+    card.className = 'entry-card';
+    card.innerHTML = `
+      <div class="entry-top" onclick="toggleEntry('${entry.id}')">
+        <div class="entry-meta">
+          <div>
+            <div class="entry-date">${dateStr} · ${timeStr}</div>
+            <div class="entry-local">📍 ${LOCAIS[entry.local] || entry.local}</div>
+          </div>
+          <span class="entry-mode-badge">${MODOS[entry.mode] || entry.mode}</span>
+        </div>
+        ${condPills ? `<div class="entry-conditions">${condPills}</div>` : ''}
+        <div class="entry-stats">
+          <div class="entry-stat"><strong>${totalCapturas}</strong>capturas</div>
+          ${entry.obs ? '<div class="entry-stat"><strong>✍</strong>obs</div>' : ''}
+        </div>
+      </div>
+      <div class="entry-body" id="eb-${entry.id}">
+        ${totalCapturas > 0 ? `
+          <div class="captures-list">
+            ${(entry.captures || []).map(c => `
+              <div class="capture-row">
+                <span class="capture-species">${c.species}</span>
+                <span class="capture-detail">${[c.size ? c.size+'cm' : '', c.weight ? c.weight+'kg' : '', c.bait || ''].filter(Boolean).join(' · ')}</span>
+              </div>
+            `).join('')}
+          </div>
+        ` : '<div style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:var(--ink-dim);padding-top:10px;">Nenhuma captura registrada</div>'}
+        ${entry.obs ? `<div class="entry-obs">"${entry.obs}"</div>` : ''}
+        <div class="entry-actions">
+          <button class="btn-sm btn-edit" onclick="openForm('${entry.id}')">✏ Editar</button>
+          <button class="btn-sm btn-danger" onclick="deleteEntry('${entry.id}')">🗑 Excluir</button>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function toggleEntry(id) {
+  const el = document.getElementById('eb-' + id);
+  if (el) el.classList.toggle('open');
+}
+
+function deleteEntry(id) {
+  if (!confirm('Excluir esta saída?')) return;
+  diary = diary.filter(e => e.id !== id);
+  saveDiary();
+  renderDiary();
+  renderStats();
+}
+
+function setDiaryFilter(f, btn) {
+  diaryFilter = f;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  renderDiary();
+}
+
+// ── STATS RENDER ─────────────────────────────────────────────────────────────
+function renderStats() {
+  const container = document.getElementById('stats-content');
+  container.innerHTML = '';
+
+  const allCaptures = diary.flatMap(e => e.captures || []);
+  const totalSaidas = diary.length;
+  const totalCapturas = allCaptures.length;
+  const especies = [...new Set(allCaptures.map(c => c.species))].length;
+
+  if (totalSaidas === 0) {
+    container.innerHTML = '<div class="empty-stats">Nenhuma saída registrada ainda.<br>Os gráficos aparecem aqui conforme você registra.</div>';
+    return;
+  }
+
+  // ── Cards de resumo
+  const cards = document.createElement('div');
+  cards.className = 'stat-cards';
+  cards.innerHTML = `
+    <div class="stat-card"><div class="num">${totalSaidas}</div><div class="lbl">Saídas</div></div>
+    <div class="stat-card"><div class="num">${totalCapturas}</div><div class="lbl">Capturas</div></div>
+    <div class="stat-card"><div class="num">${especies}</div><div class="lbl">Espécies</div></div>
+  `;
+  container.appendChild(cards);
+
+  // ── Capturas por espécie (barras horizontais)
+  if (allCaptures.length > 0) {
+    const speciesCount = {};
+    allCaptures.forEach(c => { speciesCount[c.species] = (speciesCount[c.species] || 0) + 1; });
+    const sorted = Object.entries(speciesCount).sort((a, b) => b[1] - a[1]);
+    const max = sorted[0][1];
+
+    const section = document.createElement('div');
+    section.className = 'chart-section';
+    section.innerHTML = `<div class="chart-title">🎣 Capturas por espécie</div>`;
+    const chart = document.createElement('div');
+    chart.className = 'bar-chart';
+    sorted.forEach(([species, count]) => {
+      const pct = Math.round((count / max) * 100);
+      const row = document.createElement('div');
+      row.className = 'bar-row';
+      row.innerHTML = `
+        <span class="bar-label">${species}</span>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:${pct}%">
+            <span class="bar-val">${count}</span>
+          </div>
+        </div>
+      `;
+      chart.appendChild(row);
+    });
+    section.appendChild(chart);
+    container.appendChild(section);
+  }
+
+  // ── Saídas por mês (últimos 12 meses)
+  const now = new Date();
+  const monthCounts = Array(12).fill(0);
+  const monthLabels = [];
+  for (let i = 11; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    monthLabels.push(MESES[d.getMonth()]);
+  }
+  diary.forEach(e => {
+    const d = new Date(e.datetime);
+    const monthsAgo = (now.getFullYear() - d.getFullYear()) * 12 + (now.getMonth() - d.getMonth());
+    if (monthsAgo >= 0 && monthsAgo < 12) monthCounts[11 - monthsAgo]++;
+  });
+
+  const maxMonth = Math.max(...monthCounts, 1);
+  const monthSection = document.createElement('div');
+  monthSection.className = 'chart-section';
+  monthSection.innerHTML = `<div class="chart-title">📅 Saídas por mês</div>`;
+  const monthChart = document.createElement('div');
+  monthChart.className = 'month-chart';
+  monthCounts.forEach((count, i) => {
+    const pct = Math.round((count / maxMonth) * 76);
+    const col = document.createElement('div');
+    col.className = 'month-col';
+    col.innerHTML = `
+      ${count > 0 ? `<span class="month-num">${count}</span>` : ''}
+      <div class="month-bar${count === 0 ? ' zero' : ''}" style="height:${count > 0 ? pct : 3}px"></div>
+      <span class="month-lbl">${monthLabels[i]}</span>
+    `;
+    monthChart.appendChild(col);
+  });
+  monthSection.appendChild(monthChart);
+  container.appendChild(monthSection);
+
+  // ── Capturas por ponto
+  const localCount = {};
+  diary.forEach(e => {
+    const loc = LOCAIS[e.local] || e.local;
+    const n = (e.captures || []).length;
+    localCount[loc] = (localCount[loc] || 0) + n;
+  });
+  const localEntries = Object.entries(localCount).sort((a, b) => b[1] - a[1]);
+  const maxLocal = localEntries[0]?.[1] || 1;
+
+  if (localEntries.length > 0) {
+    const localSection = document.createElement('div');
+    localSection.className = 'chart-section';
+    localSection.innerHTML = `<div class="chart-title">📍 Capturas por ponto</div>`;
+    const localChart = document.createElement('div');
+    localChart.className = 'local-chart';
+    localEntries.forEach(([name, count]) => {
+      const pct = Math.round((count / maxLocal) * 100);
+      const row = document.createElement('div');
+      row.className = 'local-row';
+      row.innerHTML = `
+        <div class="local-top">
+          <span class="local-name">${name}</span>
+          <span class="local-count">${count} captura${count !== 1 ? 's' : ''}</span>
+        </div>
+        <div class="local-bar"><div class="local-fill" style="width:${pct}%"></div></div>
+      `;
+      localChart.appendChild(row);
+    });
+    localSection.appendChild(localChart);
+    container.appendChild(localSection);
+  }
+}
+
+// ── FORM ─────────────────────────────────────────────────────────────────────
+function openForm(entryId) {
+  editingId = entryId;
+  captureCount = 0;
+  document.getElementById('captures-container').innerHTML = '';
+  pendingConditions = null;
+
+  const pad = n => String(n).padStart(2,'0');
+
+  if (entryId) {
+    // EDIT MODE
+    const entry = diary.find(e => e.id === entryId);
+    if (!entry) return;
+    document.getElementById('form-title-text').textContent = 'Editar saída';
+    document.getElementById('f-datetime').value = entry.datetime;
+    document.getElementById('f-mode').value = entry.mode;
+    document.getElementById('f-local').value = entry.local;
+    document.getElementById('f-obs').value = entry.obs || '';
+    pendingConditions = entry.conditions || null;
+
+    // Show saved conditions
+    const cond = entry.conditions || {};
+    if (cond.temp) {
+      document.getElementById('conditions-box').innerHTML = `
+        <div class="conditions-grid">
+          <div class="cond-item"><strong>${cond.temp}</strong>temperatura</div>
+          <div class="cond-item"><strong>${cond.pressure || '—'}</strong>pressão</div>
+          <div class="cond-item"><strong>${cond.weather || '—'}</strong>condição</div>
+          <div class="cond-item"><strong>${cond.moon || '—'}</strong>lua</div>
+        </div>`;
+    } else {
+      document.getElementById('conditions-box').innerHTML = '<div class="conditions-loading">Sem dados de condições salvos</div>';
+    }
+
+    // Load captures
+    (entry.captures || []).forEach(c => {
+      captureCount++;
+      const idx = captureCount;
+      const container = document.getElementById('captures-container');
+      const row = document.createElement('div');
+      row.className = 'capture-form-row';
+      row.id = `cap-row-${idx}`;
+      const opts = ESPECIES.map(e => `<option value="${e}" ${e === c.species ? 'selected' : ''}>${e}</option>`).join('');
+      row.innerHTML = `
+        <button class="remove-capture" onclick="document.getElementById('cap-row-${idx}').remove()">✕</button>
+        <select class="form-select" id="cap-species-${idx}" style="min-width:160px">${opts}</select>
+        <input class="form-input" id="cap-size-${idx}" type="number" placeholder="Tamanho (cm)" value="${c.size || ''}" style="min-width:80px" />
+        <input class="form-input" id="cap-weight-${idx}" type="number" step="0.1" placeholder="Peso (kg)" value="${c.weight || ''}" style="min-width:80px" />
+        <input class="form-input" id="cap-bait-${idx}" type="text" placeholder="Isca usada" value="${c.bait || ''}" style="min-width:100px" />
+      `;
+      container.appendChild(row);
+    });
+
+  } else {
+    // NEW MODE
+    document.getElementById('form-title-text').textContent = 'Nova saída';
+    document.getElementById('f-obs').value = '';
+    document.getElementById('conditions-box').innerHTML = '<div class="conditions-loading">← selecione data e horário para buscar</div>';
+    const now = new Date();
+    document.getElementById('f-datetime').value = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
+    fetchConditions();
+  }
+
+  document.getElementById('form-overlay').classList.add('open');
+}
+
+function closeForm() {
+  document.getElementById('form-overlay').classList.remove('open');
+  editingId = null;
+}
+
+function addCaptureRow(prefill) {
+  captureCount++;
+  const idx = captureCount;
+  const container = document.getElementById('captures-container');
+  const row = document.createElement('div');
+  row.className = 'capture-form-row';
+  row.id = `cap-row-${idx}`;
+  const opts = ESPECIES.map(e => `<option value="${e}">${e}</option>`).join('');
+  row.innerHTML = `
+    <button class="remove-capture" onclick="document.getElementById('cap-row-${idx}').remove()">✕</button>
+    <select class="form-select" id="cap-species-${idx}" style="min-width:160px">${opts}</select>
+    <input class="form-input" id="cap-size-${idx}" type="number" placeholder="Tamanho (cm)" style="min-width:80px" />
+    <input class="form-input" id="cap-weight-${idx}" type="number" step="0.1" placeholder="Peso (kg)" style="min-width:80px" />
+    <input class="form-input" id="cap-bait-${idx}" type="text" placeholder="Isca usada" style="min-width:100px" />
+  `;
+  container.appendChild(row);
+}
+
+async function fetchConditions() {
+  const dtVal = document.getElementById('f-datetime').value;
+  if (!dtVal) return;
+  const box = document.getElementById('conditions-box');
+  box.innerHTML = '<div class="conditions-loading">⏳ Buscando condições...</div>';
+
+  try {
+    const lat = -6.5, lon = -49.49;
+    const dt = new Date(dtVal);
+    const dateStr = dt.toISOString().split('T')[0];
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,precipitation,surface_pressure,weathercode&timezone=America/Belem&start_date=${dateStr}&end_date=${dateStr}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    const hour = dt.getHours();
+    const temp = data.hourly.temperature_2m[hour];
+    const pressure = data.hourly.surface_pressure[hour];
+    const wcode = data.hourly.weathercode[hour];
+    const weatherDesc = wcode <= 1 ? '☀️ Céu aberto' : wcode <= 3 ? '⛅ Parcialmente nublado' : wcode <= 48 ? '☁️ Nublado' : wcode <= 67 ? '🌧 Chuva' : '⛈ Tempestade';
+    const moon = getMoonPhase(dt);
+    pendingConditions = { temp: `${temp?.toFixed(1)}°C`, pressure: `${pressure?.toFixed(0)} hPa`, weather: weatherDesc, moon };
+    box.innerHTML = `
+      <div class="conditions-grid">
+        <div class="cond-item"><strong>${temp?.toFixed(1)}°C</strong>temperatura</div>
+        <div class="cond-item"><strong>${pressure?.toFixed(0)} hPa</strong>pressão</div>
+        <div class="cond-item"><strong>${weatherDesc}</strong>condição</div>
+        <div class="cond-item"><strong>${moon}</strong>lua</div>
+      </div>`;
+  } catch(e) {
+    box.innerHTML = '<div class="conditions-loading">⚠ Não foi possível buscar condições</div>';
+    pendingConditions = null;
+  }
+}
+
+function getMoonPhase(date) {
+  const y = date.getFullYear(), m = date.getMonth()+1, d = date.getDate();
+  let yr = y, mo = m;
+  if (mo < 3) { yr--; mo += 12; }
+  const a = Math.floor(yr/100), b = 2 - a + Math.floor(a/4);
+  const jd = Math.floor(365.25*(yr+4716)) + Math.floor(30.6001*(mo+1)) + d + b - 1524.5;
+  const phase = ((jd - 2451549.5) % 29.53058867 + 29.53058867) % 29.53058867;
+  if (phase < 1.85) return '🌑 Lua Nova';
+  if (phase < 7.38) return '🌒 Crescente';
+  if (phase < 9.22) return '🌓 Quarto Crescente';
+  if (phase < 14.77) return '🌔 Gibosa Crescente';
+  if (phase < 16.61) return '🌕 Lua Cheia';
+  if (phase < 22.15) return '🌖 Gibosa Minguante';
+  if (phase < 23.99) return '🌗 Quarto Minguante';
+  return '🌘 Minguante';
+}
+
+function saveEntry() {
+  const datetime = document.getElementById('f-datetime').value;
+  const mode = document.getElementById('f-mode').value;
+  const local = document.getElementById('f-local').value;
+  const obs = document.getElementById('f-obs').value.trim();
+  if (!datetime) { alert('Selecione a data e horário'); return; }
+
+  const captures = [];
+  document.querySelectorAll('[id^="cap-row-"]').forEach(row => {
+    const idx = row.id.replace('cap-row-', '');
+    const species = document.getElementById(`cap-species-${idx}`)?.value;
+    const size = document.getElementById(`cap-size-${idx}`)?.value;
+    const weight = document.getElementById(`cap-weight-${idx}`)?.value;
+    const bait = document.getElementById(`cap-bait-${idx}`)?.value;
+    if (species) captures.push({ species, size, weight, bait });
+  });
+
+  if (editingId) {
+    const idx = diary.findIndex(e => e.id === editingId);
+    if (idx !== -1) {
+      diary[idx] = { ...diary[idx], datetime, mode, local, obs, captures, conditions: pendingConditions || diary[idx].conditions || {} };
+    }
+  } else {
+    diary.push({ id: 'entry_' + Date.now(), datetime, mode, local, obs, captures, conditions: pendingConditions || {} });
+  }
+
+  saveDiary();
+  closeForm();
+  renderDiary();
+  renderStats();
+}
+
+// ── TAB SWITCH ───────────────────────────────────────────────────────────────
+function setTab(tab, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-checklist').style.display = tab === 'checklist' ? 'block' : 'none';
+  document.getElementById('tab-diario').style.display = tab === 'diario' ? 'block' : 'none';
+  document.getElementById('tab-stats').style.display = tab === 'stats' ? 'block' : 'none';
+  if (tab === 'diario') renderDiary();
+  if (tab === 'stats') renderStats();
+}
+
+// ── EXPOSE ───────────────────────────────────────────────────────────────────
+window.setMode = setMode;
+window.addItem = addItem;
+window.removeExtra = removeExtra;
+window.resetMode = resetMode;
+window.setTab = setTab;
+window.setDiaryFilter = setDiaryFilter;
+window.openForm = openForm;
+window.closeForm = closeForm;
+window.addCaptureRow = addCaptureRow;
+window.fetchConditions = fetchConditions;
+window.saveEntry = saveEntry;
+window.toggleEntry = toggleEntry;
+window.deleteEntry = deleteEntry;
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.activeElement?.id === 'add-input') addItem();
+  if (e.key === 'Escape') closeForm();
+});
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+loadLocal();
+renderChecklist();
+
+onValue(checklistRef, snapshot => {
+  const data = snapshot.val();
+  if (data) state = { checked:{}, extras:{}, ...data };
+  firebaseOk = true;
+  document.getElementById('fb-notice').style.display = 'none';
+  renderChecklist();
+}, () => {
+  document.getElementById('fb-notice').textContent = '⚠ Offline — salvando localmente.';
+});
+
+onValue(diaryRef, snapshot => {
+  const data = snapshot.val();
+  if (data && Array.isArray(data)) diary = data;
+  else if (data && typeof data === 'object') diary = Object.values(data);
+}, () => {});
+</script>
+</body>
+</html>
