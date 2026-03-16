@@ -2,6 +2,7 @@
   "name": "Afluente PRO",
   "short_name": "Afluente",
   "description": "App de Pesca Esportiva — Peba Araguaia",
+  "id": "/peba-araguaia/",
   "start_url": "./index.html",
   "display": "standalone",
   "orientation": "portrait",
