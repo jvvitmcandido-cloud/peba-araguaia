@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#E57C1F">
+<link rel="manifest" href="manifest.json">
 <title>Peba — Araguaia App de Pesca</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&family=Nunito+Sans:wght@400;500;600&display=swap');
@@ -1311,6 +1313,10 @@ window.saveEntry = saveEntry;
 window.toggleEntry = toggleEntry;
 window.deleteEntry = deleteEntry;
 window.exportPDF = exportPDF;
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./service-worker.js');
+}
 
 document.addEventListener('keydown', e => {
   if (e.key === 'Enter' && document.activeElement?.id === 'add-input') addItem();
