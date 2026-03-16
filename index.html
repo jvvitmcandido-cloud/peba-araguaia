@@ -249,13 +249,14 @@ header::after {
 .diary-title { font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 800; color: var(--navy); }
 .new-entry-btn { font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 800; padding: 10px 18px; background: var(--orange); color: #fff; border: none; border-radius: 10px; cursor: pointer; touch-action: manipulation; box-shadow: 0 2px 8px rgba(229,124,31,0.3); }
 .new-entry-btn:hover { background: var(--accent-dim); }
+.export-pdf-btn { font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700; padding: 8px 14px; background: transparent; color: var(--navy); border: 1.5px solid var(--navy); border-radius: 10px; cursor: pointer; touch-action: manipulation; }
 
 .filter-bar { display: flex; gap: 6px; margin-bottom: 14px; overflow-x: auto; padding-bottom: 2px; }
 .filter-chip { font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700; padding: 6px 14px; border: 1.5px solid var(--border-mid); border-radius: 20px; background: var(--surface); color: var(--ink-mid); cursor: pointer; touch-action: manipulation; white-space: nowrap; transition: all 0.15s; }
 .filter-chip.active { background: var(--navy); color: #fff; border-color: var(--navy); }
 
-.entry-card { border: 1px solid var(--border); border-radius: 14px; background: var(--surface); margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
-.entry-top { padding: 10px 12px; cursor: pointer; touch-action: manipulation; }
+.entry-card { border: 1px solid var(--border); border-radius: 14px; background: var(--surface); margin-bottom: 6px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+.entry-top { padding: 8px 12px; cursor: pointer; touch-action: manipulation; }
 .entry-meta { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
 .entry-date { font-family: 'Nunito', sans-serif; font-size: 16px; font-weight: 800; color: var(--navy); }
 .entry-mode-badge { font-family: 'Nunito', sans-serif; font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 20px; background: var(--orange-dim); color: var(--orange); border: 1px solid rgba(229,124,31,0.3); white-space: nowrap; }
@@ -365,13 +366,14 @@ header::after {
 .diary-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 0 12px; }
 .diary-title { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: var(--ink-mid); letter-spacing: 1px; }
 .new-entry-btn { font-family: 'JetBrains Mono', monospace; font-size: 11px; padding: 9px 16px; background: var(--accent); color: #0c1410; border: none; border-radius: 5px; cursor: pointer; touch-action: manipulation; font-weight: 500; }
+.export-pdf-btn { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 500; padding: 8px 12px; background: transparent; color: var(--ink-mid); border: 1px solid var(--border-mid); border-radius: 5px; cursor: pointer; touch-action: manipulation; }
 
 .filter-bar { display: flex; gap: 6px; margin-bottom: 14px; overflow-x: auto; padding-bottom: 2px; }
 .filter-chip { font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 5px 12px; border: 1px solid var(--border-mid); border-radius: 20px; background: transparent; color: var(--ink-dim); cursor: pointer; touch-action: manipulation; white-space: nowrap; transition: all 0.15s; }
 .filter-chip.active { background: var(--accent-bg); color: var(--accent); border-color: var(--accent-dim); }
 
-.entry-card { border: 1px solid var(--border); border-radius: 8px; background: var(--surface); margin-bottom: 10px; overflow: hidden; }
-.entry-top { padding: 10px 12px; cursor: pointer; touch-action: manipulation; }
+.entry-card { border: 1px solid var(--border); border-radius: 8px; background: var(--surface); margin-bottom: 6px; overflow: hidden; }
+.entry-top { padding: 8px 12px; cursor: pointer; touch-action: manipulation; }
 .entry-meta { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
 .entry-date { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; color: #fff; }
 .entry-mode-badge { font-family: 'JetBrains Mono', monospace; font-size: 9px; padding: 3px 8px; border-radius: 3px; background: var(--accent-bg); color: var(--accent-dim); border: 1px solid var(--accent-dim); white-space: nowrap; }
@@ -531,7 +533,10 @@ header::after {
   <div class="diary-wrap">
     <div class="diary-header">
       <span class="diary-title">// SAÍDAS REGISTRADAS</span>
-      <button class="new-entry-btn" onclick="openForm(null)">+ Nova saída</button>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button class="export-pdf-btn" onclick="exportPDF()">↓ PDF</button>
+        <button class="new-entry-btn" onclick="openForm(null)">+ Nova saída</button>
+      </div>
     </div>
     <div class="filter-bar">
       <button class="filter-chip active" onclick="setDiaryFilter('todos', this)">TODOS</button>
@@ -1233,6 +1238,64 @@ function setTab(tab, btn) {
   if (tab === 'stats') renderStats();
 }
 
+// ── EXPORT PDF ───────────────────────────────────────────────────────────────
+function exportPDF() {
+  const sorted = [...diary].sort((a, b) => new Date(b.datetime) - new Date(a.datetime));
+  if (sorted.length === 0) { alert('Nenhuma saída para exportar.'); return; }
+
+  const rows = sorted.map(entry => {
+    const [datePart, timePart = '00:00'] = (entry.datetime || '').split('T');
+    const [dy, dm, dd] = datePart.split('-').map(Number);
+    const [dh, dmin] = timePart.split(':').map(Number);
+    const dt = new Date(dy, dm - 1, dd, dh, dmin);
+    const dateStr = dt.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
+    const timeStr = dt.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    const capturas = (entry.captures || []).map(c =>
+      [c.species, c.size ? c.size + 'cm' : '', c.weight ? c.weight + 'kg' : '', c.bait || ''].filter(Boolean).join(' · ')
+    ).join('<br>') || '—';
+    return `<tr>
+      <td>${dateStr}<br><small>${timeStr}</small></td>
+      <td>${LOCAIS[entry.local] || entry.local}</td>
+      <td>${MODOS[entry.mode] || entry.mode}</td>
+      <td style="text-align:center">${(entry.captures || []).length}</td>
+      <td>${capturas}</td>
+      <td>${entry.obs || '—'}</td>
+    </tr>`;
+  }).join('');
+
+  const html = `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Diário de Pesca — Peba Araguaia</title>
+<style>
+  body { font-family: Arial, sans-serif; font-size: 12px; color: #1a202c; padding: 24px; }
+  h1 { font-size: 20px; margin-bottom: 2px; color: #1F3555; }
+  p { color: #718096; margin-bottom: 18px; font-size: 11px; }
+  table { width: 100%; border-collapse: collapse; }
+  th { background: #1F3555; color: #fff; padding: 8px 10px; text-align: left; font-size: 11px; }
+  td { padding: 7px 10px; border-bottom: 1px solid #e2e8f0; vertical-align: top; font-size: 11px; }
+  tr:nth-child(even) td { background: #f8fafc; }
+  small { color: #718096; }
+  @media print { body { padding: 0; } }
+</style>
+</head>
+<body>
+<h1>Diário de Pesca</h1>
+<p>Peba — Araguaia &nbsp;·&nbsp; Exportado em ${new Date().toLocaleDateString('pt-BR')} &nbsp;·&nbsp; ${sorted.length} saída(s)</p>
+<table>
+  <thead><tr><th>Data/Hora</th><th>Local</th><th>Modo</th><th>#</th><th>Capturas</th><th>Observações</th></tr></thead>
+  <tbody>${rows}</tbody>
+</table>
+</body>
+</html>`;
+
+  const win = window.open('', '_blank');
+  win.document.write(html);
+  win.document.close();
+  win.print();
+}
+
 // ── EXPOSE ───────────────────────────────────────────────────────────────────
 window.setMode = setMode;
 window.addItem = addItem;
@@ -1247,6 +1310,7 @@ window.fetchConditions = fetchConditions;
 window.saveEntry = saveEntry;
 window.toggleEntry = toggleEntry;
 window.deleteEntry = deleteEntry;
+window.exportPDF = exportPDF;
 
 document.addEventListener('keydown', e => {
   if (e.key === 'Enter' && document.activeElement?.id === 'add-input') addItem();
