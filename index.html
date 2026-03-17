@@ -264,27 +264,29 @@ header::after {
 .filter-chip { font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700; padding: 6px 14px; border: 1.5px solid var(--border-mid); border-radius: 20px; background: var(--surface); color: var(--ink-mid); cursor: pointer; touch-action: manipulation; white-space: nowrap; transition: all 0.15s; }
 .filter-chip.active { background: var(--navy); color: #fff; border-color: var(--navy); }
 
-.entry-card { border: 1px solid var(--border); border-radius: 14px; background: var(--surface); margin-bottom: 6px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
-.entry-top { padding: 8px 12px; cursor: pointer; touch-action: manipulation; }
-.entry-meta { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
-.entry-date { font-family: 'Nunito', sans-serif; font-size: 16px; font-weight: 800; color: var(--navy); }
-.entry-mode-badge { font-family: 'Nunito', sans-serif; font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 20px; background: var(--orange-dim); color: var(--orange); border: 1px solid rgba(229,124,31,0.3); white-space: nowrap; }
-.entry-local { font-size: 12px; font-weight: 600; color: var(--water); margin-top: 4px; }
-.entry-conditions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
-.cond-pill { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 6px; background: var(--surface2); color: var(--ink-mid); border: 1px solid var(--border); }
-.entry-stats { display: flex; gap: 14px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
-.entry-stat { font-size: 11px; color: var(--ink-dim); font-weight: 600; }
-.entry-stat strong { display: block; font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 800; color: var(--navy); }
-.entry-body { display: none; padding: 0 16px 14px; border-top: 1px solid var(--border); background: var(--surface2); }
+.entry-card { border: 1px solid var(--border); border-radius: 10px; background: var(--surface); margin-bottom: 4px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+.entry-top { padding: 10px 12px; cursor: pointer; touch-action: manipulation; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.entry-row-left { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.entry-date { font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 800; color: var(--navy); white-space: nowrap; }
+.entry-local { font-size: 11px; font-weight: 600; color: var(--water); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.entry-row-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.entry-mode-badge { font-family: 'Nunito', sans-serif; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 20px; background: var(--orange-dim); color: var(--orange); border: 1px solid rgba(229,124,31,0.3); white-space: nowrap; }
+.entry-count { font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 800; color: var(--ink-mid); }
+.entry-chevron { font-size: 14px; color: var(--ink-dim); transition: transform 0.2s; line-height: 1; }
+.entry-card:has(.entry-body.open) .entry-chevron { transform: rotate(90deg); }
+.entry-body { display: none; padding: 0 12px 12px; border-top: 1px solid var(--border); background: var(--surface2); }
 .entry-body.open { display: block; }
-.captures-list { margin-top: 10px; }
-.capture-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.entry-body-date { font-size: 11px; color: var(--ink-dim); padding-top: 10px; margin-bottom: 8px; }
+.entry-conditions { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+.cond-pill { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 6px; background: var(--surface); color: var(--ink-mid); border: 1px solid var(--border); }
+.captures-list { margin-top: 0; }
+.capture-row { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--border); }
 .capture-row:last-child { border-bottom: none; }
-.capture-species { font-weight: 700; font-size: 13px; color: var(--ink); flex: 1; }
-.capture-detail { font-size: 12px; font-weight: 600; color: var(--ink-dim); }
-.entry-obs { font-size: 13px; color: var(--ink-mid); margin-top: 10px; line-height: 1.5; font-style: italic; background: var(--surface); padding: 10px 12px; border-radius: 8px; border-left: 3px solid var(--orange); }
-.entry-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-.btn-sm { font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700; padding: 7px 14px; border-radius: 8px; cursor: pointer; touch-action: manipulation; transition: all 0.15s; border: 1.5px solid var(--border-mid); background: var(--surface); color: var(--ink-mid); }
+.capture-species { font-weight: 700; font-size: 12px; color: var(--ink); flex: 1; }
+.capture-detail { font-size: 11px; font-weight: 600; color: var(--ink-dim); }
+.entry-obs { font-size: 12px; color: var(--ink-mid); margin-top: 8px; line-height: 1.5; font-style: italic; background: var(--surface); padding: 8px 10px; border-radius: 8px; border-left: 3px solid var(--orange); }
+.entry-actions { display: flex; gap: 8px; margin-top: 10px; }
+.btn-sm { font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 8px; cursor: pointer; touch-action: manipulation; transition: all 0.15s; border: 1.5px solid var(--border-mid); background: var(--surface); color: var(--ink-mid); }
 .btn-edit:hover { border-color: var(--navy); color: var(--navy); }
 .btn-danger:hover { border-color: var(--red); color: var(--red); }
 
@@ -381,27 +383,29 @@ header::after {
 .filter-chip { font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 5px 12px; border: 1px solid var(--border-mid); border-radius: 20px; background: transparent; color: var(--ink-dim); cursor: pointer; touch-action: manipulation; white-space: nowrap; transition: all 0.15s; }
 .filter-chip.active { background: var(--accent-bg); color: var(--accent); border-color: var(--accent-dim); }
 
-.entry-card { border: 1px solid var(--border); border-radius: 8px; background: var(--surface); margin-bottom: 6px; overflow: hidden; }
-.entry-top { padding: 8px 12px; cursor: pointer; touch-action: manipulation; }
-.entry-meta { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
-.entry-date { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; color: #fff; }
+.entry-card { border: 1px solid var(--border); border-radius: 6px; background: var(--surface); margin-bottom: 4px; overflow: hidden; }
+.entry-top { padding: 10px 12px; cursor: pointer; touch-action: manipulation; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.entry-row-left { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.entry-date { font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700; color: var(--ink); white-space: nowrap; }
+.entry-local { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--water); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.entry-row-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
 .entry-mode-badge { font-family: 'JetBrains Mono', monospace; font-size: 9px; padding: 3px 8px; border-radius: 3px; background: var(--accent-bg); color: var(--accent-dim); border: 1px solid var(--accent-dim); white-space: nowrap; }
-.entry-local { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--water); margin-top: 4px; }
-.entry-conditions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
-.cond-pill { font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 3px 8px; border-radius: 3px; background: var(--surface2); color: var(--ink-mid); border: 1px solid var(--border-mid); }
-.entry-stats { display: flex; gap: 14px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
-.entry-stat { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--ink-dim); }
-.entry-stat strong { display: block; font-size: 14px; color: var(--ink-mid); font-family: 'Syne', sans-serif; }
-.entry-body { display: none; padding: 0 16px 14px; border-top: 1px solid var(--border); }
+.entry-count { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--ink-mid); }
+.entry-chevron { font-size: 13px; color: var(--ink-dim); transition: transform 0.2s; line-height: 1; }
+.entry-card:has(.entry-body.open) .entry-chevron { transform: rotate(90deg); }
+.entry-body { display: none; padding: 0 12px 12px; border-top: 1px solid var(--border); }
 .entry-body.open { display: block; }
-.captures-list { margin-top: 10px; }
-.capture-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.entry-body-date { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--ink-dim); padding-top: 10px; margin-bottom: 8px; }
+.entry-conditions { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+.cond-pill { font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 3px 8px; border-radius: 3px; background: var(--surface2); color: var(--ink-mid); border: 1px solid var(--border-mid); }
+.captures-list { margin-top: 0; }
+.capture-row { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--border); }
 .capture-row:last-child { border-bottom: none; }
-.capture-species { font-weight: 600; font-size: 13px; color: var(--ink); flex: 1; }
+.capture-species { font-weight: 600; font-size: 12px; color: var(--ink); flex: 1; }
 .capture-detail { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--ink-dim); }
-.entry-obs { font-size: 13px; color: var(--ink-mid); margin-top: 10px; line-height: 1.5; font-style: italic; }
-.entry-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-.btn-sm { font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 7px 14px; border-radius: 4px; cursor: pointer; touch-action: manipulation; transition: all 0.15s; border: 1px solid var(--border-mid); background: transparent; color: var(--ink-dim); }
+.entry-obs { font-size: 12px; color: var(--ink-mid); margin-top: 8px; line-height: 1.5; font-style: italic; }
+.entry-actions { display: flex; gap: 8px; margin-top: 10px; }
+.btn-sm { font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 6px 12px; border-radius: 4px; cursor: pointer; touch-action: manipulation; transition: all 0.15s; border: 1px solid var(--border-mid); background: transparent; color: var(--ink-dim); }
 .btn-edit:hover { border-color: var(--accent-dim); color: var(--accent); }
 .btn-danger:hover { border-color: var(--red); color: var(--red); }
 
@@ -480,6 +484,25 @@ header::after {
 
 .fb-notice { position: relative; z-index: 1; margin: 10px 20px 0; padding: 8px 12px; background: var(--orange-bg); border: 1px solid rgba(255,140,66,0.2); border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--orange); }
 
+/* ── FOOTER ── */
+.app-footer { text-align: center; padding: 24px 16px 32px; background: var(--bg); border-top: 1px solid var(--border); }
+.app-footer-brand { font-family: 'Nunito', sans-serif; font-size: 16px; font-weight: 900; color: var(--navy); letter-spacing: 1px; display: block; }
+.app-footer-brand span { color: var(--orange); }
+.app-footer-tagline { display: block; font-family: 'Nunito Sans', sans-serif; font-size: 12px; color: var(--ink-dim); margin-top: 4px; }
+.app-footer-copy { display: block; font-family: 'Nunito Sans', sans-serif; font-size: 11px; color: var(--ink-dim); margin-top: 2px; }
+
+/* ── FEEDBACK TAB ── */
+.feedback-wrap { padding: 0 16px 30px; }
+.feedback-header { padding: 16px 0 12px; font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 800; color: var(--navy); }
+.feedback-form { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px; }
+.feedback-label { display: block; font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700; color: var(--ink-mid); margin-bottom: 6px; margin-top: 14px; }
+.feedback-label:first-child { margin-top: 0; }
+.feedback-select { width: 100%; padding: 10px 12px; border: 1.5px solid var(--border-mid); border-radius: 10px; font-family: 'Nunito Sans', sans-serif; font-size: 14px; background: var(--surface2); color: var(--ink); outline: none; }
+.feedback-textarea { width: 100%; padding: 10px 12px; border: 1.5px solid var(--border-mid); border-radius: 10px; font-family: 'Nunito Sans', sans-serif; font-size: 14px; background: var(--surface2); color: var(--ink); outline: none; resize: vertical; min-height: 100px; }
+.feedback-select:focus, .feedback-textarea:focus { border-color: var(--navy); }
+.feedback-submit { width: 100%; margin-top: 16px; padding: 13px; background: var(--orange); color: #fff; border: none; border-radius: 10px; font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 800; cursor: pointer; touch-action: manipulation; box-shadow: 0 2px 8px rgba(229,124,31,0.3); }
+.feedback-submit:hover { background: var(--accent-dim); }
+
 .hidden { display: none !important; }
 </style>
 </head>
@@ -507,6 +530,7 @@ header::after {
   <button class="tab-btn active" onclick="setTab('checklist', this)">✅ CHECK</button>
   <button class="tab-btn" onclick="setTab('diario', this)">📓 DIÁRIO</button>
   <button class="tab-btn" onclick="setTab('stats', this)">📊 STATS</button>
+  <button class="tab-btn" onclick="setTab('feedback', this)">💬 FDB</button>
 </div>
 
 <div class="fb-notice" id="fb-notice">⚠ Conectando...</div>
@@ -541,6 +565,11 @@ header::after {
   <div class="reset-row">
     <button class="reset-btn" onclick="resetMode()">↺ resetar modo atual</button>
   </div>
+  <div class="app-footer">
+    <span class="app-footer-brand">AFLUENTE <span>PRO</span></span>
+    <span class="app-footer-tagline">Pesca Esportiva · Rio Parauapebas</span>
+    <span class="app-footer-copy">© 2026</span>
+  </div>
 </div>
 
 <!-- ── DIÁRIO ── -->
@@ -562,6 +591,11 @@ header::after {
     </div>
     <div id="diary-list"></div>
   </div>
+  <div class="app-footer">
+    <span class="app-footer-brand">AFLUENTE <span>PRO</span></span>
+    <span class="app-footer-tagline">Pesca Esportiva · Rio Parauapebas</span>
+    <span class="app-footer-copy">© 2026</span>
+  </div>
 </div>
 
 <!-- ── STATS ── -->
@@ -569,6 +603,35 @@ header::after {
   <div class="stats-wrap">
     <div class="stats-header">// ESTATÍSTICAS</div>
     <div id="stats-content"></div>
+  </div>
+  <div class="app-footer">
+    <span class="app-footer-brand">AFLUENTE <span>PRO</span></span>
+    <span class="app-footer-tagline">Pesca Esportiva · Rio Parauapebas</span>
+    <span class="app-footer-copy">© 2026</span>
+  </div>
+</div>
+
+<!-- ── FEEDBACK ── -->
+<div id="tab-feedback" style="display:none;">
+  <div class="feedback-wrap">
+    <div class="feedback-header">// FEEDBACK</div>
+    <div class="feedback-form">
+      <label class="feedback-label">Categoria</label>
+      <select class="feedback-select" id="fb-category">
+        <option value="Bug">🐛 Bug</option>
+        <option value="Sugestão">💡 Sugestão</option>
+        <option value="Elogio">⭐ Elogio</option>
+        <option value="Outro">📝 Outro</option>
+      </select>
+      <label class="feedback-label">Mensagem</label>
+      <textarea class="feedback-textarea" id="fb-message" placeholder="Descreva seu feedback..."></textarea>
+      <button class="feedback-submit" onclick="submitFeedback()">Enviar Feedback</button>
+    </div>
+  </div>
+  <div class="app-footer">
+    <span class="app-footer-brand">AFLUENTE <span>PRO</span></span>
+    <span class="app-footer-tagline">Pesca Esportiva · Rio Parauapebas</span>
+    <span class="app-footer-copy">© 2026</span>
   </div>
 </div>
 
@@ -641,6 +704,7 @@ const fbApp = initializeApp(firebaseConfig);
 const db = getDatabase(fbApp);
 const checklistRef = ref(db, 'pesca-checklist');
 const diaryRef = ref(db, 'pesca-diario');
+const feedbackRef = ref(db, 'feedback');
 let firebaseOk = false;
 
 const ESPECIES = [
@@ -873,11 +937,9 @@ function renderDiary() {
   }
 
   sorted.forEach(entry => {
-    const [datePart, timePart = '00:00'] = (entry.datetime || '').split('T');
-    const [dy, dm, dd] = datePart.split('-').map(Number);
-    const [dh, dmin] = timePart.split(':').map(Number);
-    const dt = new Date(dy, dm - 1, dd, dh, dmin);
-    const dateStr = dt.toLocaleDateString('pt-BR', { day:'2-digit', month:'short', year:'numeric' });
+    const dt = new Date(entry.datetime);
+    const dateShort = dt.toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit' });
+    const dateFull = dt.toLocaleDateString('pt-BR', { day:'2-digit', month:'short', year:'numeric' });
     const timeStr = dt.toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
     const totalCapturas = (entry.captures || []).length;
     const cond = entry.conditions || {};
@@ -893,20 +955,19 @@ function renderDiary() {
     card.className = 'entry-card';
     card.innerHTML = `
       <div class="entry-top" onclick="toggleEntry('${entry.id}')">
-        <div class="entry-meta">
-          <div>
-            <div class="entry-date">${dateStr} · ${timeStr}</div>
-            <div class="entry-local">📍 ${LOCAIS[entry.local] || entry.local}</div>
-          </div>
-          <span class="entry-mode-badge">${MODOS[entry.mode] || entry.mode}</span>
+        <div class="entry-row-left">
+          <div class="entry-date">${dateShort} · ${timeStr}</div>
+          <div class="entry-local">📍 ${LOCAIS[entry.local] || entry.local}</div>
         </div>
-        ${condPills ? `<div class="entry-conditions">${condPills}</div>` : ''}
-        <div class="entry-stats">
-          <div class="entry-stat"><strong>${totalCapturas}</strong>capturas</div>
-          ${entry.obs ? '<div class="entry-stat"><strong>✍</strong>obs</div>' : ''}
+        <div class="entry-row-right">
+          <span class="entry-mode-badge">${MODOS[entry.mode] || entry.mode}</span>
+          <span class="entry-count">${totalCapturas}🐟</span>
+          <span class="entry-chevron">›</span>
         </div>
       </div>
       <div class="entry-body" id="eb-${entry.id}">
+        <div class="entry-body-date">📅 ${dateFull} · ${timeStr}</div>
+        ${condPills ? `<div class="entry-conditions">${condPills}</div>` : ''}
         ${totalCapturas > 0 ? `
           <div class="captures-list">
             ${(entry.captures || []).map(c => `
@@ -916,7 +977,7 @@ function renderDiary() {
               </div>
             `).join('')}
           </div>
-        ` : '<div style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:var(--ink-dim);padding-top:10px;">Nenhuma captura registrada</div>'}
+        ` : '<div style="font-size:11px;color:var(--ink-dim);padding-top:4px;">Nenhuma captura registrada</div>'}
         ${entry.obs ? `<div class="entry-obs">"${entry.obs}"</div>` : ''}
         <div class="entry-actions">
           <button class="btn-sm btn-edit" onclick="openForm('${entry.id}')">✏ Editar</button>
@@ -1249,8 +1310,23 @@ function setTab(tab, btn) {
   document.getElementById('tab-checklist').style.display = tab === 'checklist' ? 'block' : 'none';
   document.getElementById('tab-diario').style.display = tab === 'diario' ? 'block' : 'none';
   document.getElementById('tab-stats').style.display = tab === 'stats' ? 'block' : 'none';
+  document.getElementById('tab-feedback').style.display = tab === 'feedback' ? 'block' : 'none';
   if (tab === 'diario') renderDiary();
   if (tab === 'stats') renderStats();
+}
+
+// ── FEEDBACK ─────────────────────────────────────────────────────────────────
+function submitFeedback() {
+  const category = document.getElementById('fb-category').value;
+  const message = document.getElementById('fb-message').value.trim();
+  if (!message) { alert('Escreva uma mensagem antes de enviar.'); return; }
+  const entry = { category, message, timestamp: Date.now() };
+  set(ref(db, 'feedback/' + Date.now()), entry)
+    .then(() => {
+      document.getElementById('fb-message').value = '';
+      alert('Feedback enviado! Obrigado 🙏');
+    })
+    .catch(() => alert('Erro ao enviar. Tente novamente.'));
 }
 
 // ── EXPORT PDF ───────────────────────────────────────────────────────────────
@@ -1326,6 +1402,7 @@ window.saveEntry = saveEntry;
 window.toggleEntry = toggleEntry;
 window.deleteEntry = deleteEntry;
 window.exportPDF = exportPDF;
+window.submitFeedback = submitFeedback;
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./service-worker.js');
@@ -1370,7 +1447,10 @@ onValue(diaryRef, snapshot => {
   const data = snapshot.val();
   if (data && Array.isArray(data)) diary = data;
   else if (data && typeof data === 'object') diary = Object.values(data);
+  else diary = [];
   hideSplash();
+  if (document.getElementById('tab-diario').style.display !== 'none') renderDiary();
+  if (document.getElementById('tab-stats').style.display !== 'none') renderStats();
 }, () => { hideSplash(); });
 </script>
 </body>
